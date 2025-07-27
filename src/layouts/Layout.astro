@@ -1,7 +1,7 @@
 ---
 import '@/styles/global.css';
 import { baseUrl } from '@/utils/functions';
-const favicon = baseUrl('/assets/favicon.webp')
+const favicon = baseUrl('/assets/favicon.webp');
 ---
 
 <!doctype html>
@@ -10,18 +10,10 @@ const favicon = baseUrl('/assets/favicon.webp')
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width' />
     <link rel='icon' type='image/svg+xml' href={favicon} />
-    <meta name="google" content="notranslate" />
-    <title>Plasma</title>
+    <meta name='google' content='notranslate' />
+    <title>Custom Gradient</title>
   </head>
   <body>
     <slot />
   </body>
 </html>
-
-
-
-<!-- <script>
-  window.addEventListener('resize', e => {
-    document.title = `${window.innerWidth}`;
-  });
-</script> -->

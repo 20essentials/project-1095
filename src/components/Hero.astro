@@ -5,11 +5,20 @@
 <script>
   /* Note that all the comments simulate if the widthImageData and heightImagedData would be 100 x 100 */
   import { $ } from '@/utils/functions';
+  import { Pane } from 'tweakpane';
+  const menu = new Pane();
+  import alea from 'alea';
+  import { createNoise2D } from 'simplex-noise';
+  const noise2d = createNoise2D(alea('GoodMorningGuys'));
   const canvas = $('canvas') as HTMLCanvasElement;
-  const ctx = canvas.getContext('2d');
-  const numOfBytes = 4;
-  let widthImageData = 200; //100
-  let heigthImageData = 200; //100
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+  const STATE = {
+    numOfBytes: 4
+  };
+  menu.addBinding(STATE, 'numOfBytes', { min: 1, max: 25, step: 1 });
+
+  let widthImageData = 100; //100
+  let heigthImageData = 100; //100
   let imageData = ctx.createImageData(widthImageData, heigthImageData);
   let imageLength = imageData.data.length; //40 000
   /* 
@@ -30,9 +39,9 @@
   window.addEventListener('resize', resize);
 
   function drawCanvas() {
-    for (let i = 0; i < imageLength; i += numOfBytes) {
+    for (let i = 0; i < imageLength; i += STATE.numOfBytes) {
       /* I would we 0, 4, 0, ... 39996 */
-      const totalBytes = widthImageData * numOfBytes; // 400
+      const totalBytes = widthImageData * STATE.numOfBytes; // 400
       let x = ((i % totalBytes) / totalBytes) * 255;
       /*  
       i % totalBytes => [Between 0 and 396]
@@ -59,6 +68,8 @@
     }
 
     ctx.putImageData(imageData, 0, 0);
+
+    window.requestAnimationFrame(drawCanvas);
   }
 
   drawCanvas();
