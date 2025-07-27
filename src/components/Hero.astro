@@ -1,0 +1,73 @@
+<section>
+  <canvas class='am-canvas'></canvas>
+</section>
+
+<script>
+  /* Note that all the comments simulate if the widthImageData and heightImagedData would be 100 x 100 */
+  import { $ } from '@/utils/functions';
+  const canvas = $('canvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d');
+  const numOfBytes = 4;
+  let widthImageData = 200; //100
+  let heigthImageData = 200; //100
+  let imageData = ctx.createImageData(widthImageData, heigthImageData);
+  let imageLength = imageData.data.length; //40 000
+  /* 
+    const imageLength = widthImageData * heigthImageData * numOfBytes 
+    Each "4" elements of the array representing a Pixel with the color RGBA
+  */
+
+  function resize() {
+    widthImageData = canvas.width = window.innerWidth;
+    heigthImageData = canvas.height = window.innerHeight;
+    imageData = ctx.createImageData(widthImageData, heigthImageData);
+    imageLength = imageData.data.length; //40 000
+    drawCanvas();
+  }
+
+  resize();
+
+  window.addEventListener('resize', resize);
+
+  function drawCanvas() {
+    for (let i = 0; i < imageLength; i += numOfBytes) {
+      /* I would we 0, 4, 0, ... 39996 */
+      const totalBytes = widthImageData * numOfBytes; // 400
+      let x = ((i % totalBytes) / totalBytes) * 255;
+      /*  
+      i % totalBytes => [Between 0 and 396]
+      (i % totalBytes) / totalBytes => [Between 0 and 396 / 400 (0.99)]
+      ((i % totalBytes) / totalBytes) * 255; => [Between 0 and 252.45]
+        min: (0 / 400) * 255 = 0
+        max: (396 / 400) * 255 ≈ 252.45
+    */
+
+      let y = (Math.ceil(i / totalBytes) / 100) * 255;
+      /* 
+      i / 400 => [Between 0 and 99.99 (39996 / 400)]
+      Math.ceil(i / totalBytes) => [Between 1 to 100]
+      Math.ceil(i / totalBytes) / 100) => [Between  0.01 a 1]
+      Math.ceil(i / totalBytes) / 100) * 255 => [Between 2.55 to 255]
+        min:(1 / 100) * 255 = 2.55
+       (100 / 100) * 255 = 255
+    */
+
+      imageData.data[i + 0] = x; // R value
+      imageData.data[i + 1] = y; // G value
+      imageData.data[i + 2] = 255 - x; // B value
+      imageData.data[i + 3] = 255; // A value
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+  }
+
+  drawCanvas();
+</script>
+
+<style>
+  section {
+    height: 100vh;
+    overflow: hidden;
+    width: 100%;
+  }
+</style>
