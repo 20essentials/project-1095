@@ -7,9 +7,6 @@
   import { $ } from '@/utils/functions';
   import { Pane } from 'tweakpane';
   const menu = new Pane();
-  import alea from 'alea';
-  import { createNoise2D } from 'simplex-noise';
-  const noise2d = createNoise2D(alea('GoodMorningGuys'));
   const canvas = $('canvas') as HTMLCanvasElement;
   const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   const STATE = {
